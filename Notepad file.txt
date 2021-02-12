@@ -1,0 +1,14 @@
+grocery 1000
+personal 300
+medical 200
+outing 500
+grocery 800
+personal 1000
+medical 100
+outing 800
+grocery 1500
+personal 300
+grocery 500
+personal 300
+medical 150
+outing 500

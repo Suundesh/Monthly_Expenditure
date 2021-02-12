@@ -1,0 +1,204 @@
+#!pip install bar_chart_race 
+import pandas as pd
+import matplotlib.pyplot as plt
+import bar_chart_race as bcr
+from google.colab import files
+################################################### START OF USER INPUT ####################################################################
+
+#function for user input module
+def userinput():
+  total=0
+  list_for_all_week=[]
+  print("Enter expenses for 4 weeks as and when prompted\n")
+  for i in range(0,4):
+    print("Enter the Expenses for week",i+1)
+    week=user_input()
+    total=sum(week)+total
+    list_for_all_week.append(week)
+  final_dict={'WEEK1':list_for_all_week[0][:],'WEEK2':list_for_all_week[1][:],'WEEK3':list_for_all_week[2][:],'WEEK4':list_for_all_week[3][:]}
+  data_frame=pd.DataFrame(final_dict,index=["groceries","medicine","outings","home maintenance"])
+  display(data_frame,total)
+
+  sumlst=[]
+  sum1=0
+  for i in range(0,4):
+    for j in range(0,len(list_for_all_week)):
+      sum1=sum1+list_for_all_week[j][i]
+    sumlst.append(sum1)
+    sum1=0
+
+  print("****************************** GRAPHICAL REPRESENTATION ************************************\n")
+  bins=sumlst
+  labels=["Grocery","medical","outings","home_maintenence"]
+  plt.xlabel("Expenses")
+  plt.ylabel("Amount")
+  for index,value in enumerate(bins):
+    plt.text(index,value,str(value))
+  plt.bar(labels,bins,color=['blue','red','green','brown'])
+  plt.title('Monthly Expenses Graph')
+  plt.savefig('usergraph.png',dpi=200)
+  files.download('usergraph.png')
+  plt.show()
+
+def display(data_frame,total):
+  print("Monthly expense spent")
+  print(data_frame)
+  print("\n")
+
+  maxvalue=data_frame.max(axis=1)
+  print("The maximum amount spent on groceries,medicine,outings,home expenses in a month is")
+  print(maxvalue)
+  print("\n")
+
+  minvalue=data_frame.min(axis=1)
+  print("The minimum amount spent on groceries,medicine,outings,home expenses in a month is")
+  print(minvalue)
+  print("\n")
+
+  sumvalue=data_frame.sum(axis=1)
+  print("The total amount spent on groceries,medicine,outings,home expenses in a month is")
+  print(sumvalue)
+  print("\n")
+
+  print("THE TOTAL AMOUNT SPENT THIS MONTH IS",total)
+  if total<salary:
+    print("Congratulations !!!!!!\nYOU SAVED {} RS THIS MONTH\n".format(salary-total))
+  elif total>salary:
+    print("Ohh Dear you overspent {} Rs this Month\n".format(total-salary))
+  else:
+    print("Dear {} Your Expenses Are in Limit\n".format(name))
+
+  
+def user_input():
+  grocery=float(input("Enter the amount spent on groceries\n"))
+  medical_expenses=float(input("Enter the amount spent on Medical\n"))
+  outing_expenses=float(input("Enter the expenses spent on outings\n"))
+  home_expenses=float(input("Enter the amount spent on home maintenance\n"))
+  print("\n")
+  weekwise_lst=[]
+  weekwise_lst.append(grocery)
+  weekwise_lst.append(medical_expenses)
+  weekwise_lst.append(outing_expenses)
+  weekwise_lst.append(home_expenses)
+  return(weekwise_lst)
+
+
+#################################################### END USER INPUT ###########################################################
+
+
+################################################### START OF NOTEPAD PROGRAM ##################################################
+
+#file handeling using notepad
+def notepad(): 
+  try:
+    fname=input("Enter the file name\n")
+    file=open(fname,"r")
+    d={}
+    for line in file:
+      line=line.split()
+      item=line[0]
+      cost=int(line[1])
+      if item not in d:
+        d[item]=0
+      if item=='grocery':
+        d[item]+=cost
+      elif item=='medical':
+        d[item]+=cost
+      elif item=='personal':
+        d[item]+=cost
+      elif item=='outing':
+        d[item]+=cost
+      else:
+        d[item]+=cost
+
+    expi=list(d.keys())
+    vali=list(d.values())
+    exp={'Expenses':expi,'Amount':vali}
+    df=pd.DataFrame(exp)
+    print("\n")
+    print(df)
+    print("\n")
+ 
+    print("THE TOTAL AMOUNT SPENT THIS MONTH IS",sum(list(d.values())))
+    if sum(list(d.values()))<salary:
+      print("Congratulations !!!!!!\nYOU SAVED {} RS THIS MONTH\n".format(salary-sum(list(d.values()))))
+    elif sum(list(d.values()))>salary:
+      print("Ohh Dear you overspent {} Rs\n".format(sum(list(d.values()))-salary))
+    else:
+      print("Dear {} Your Expenses Are in Limit\n".format(name))
+  
+    print("****************************** GRAPHICAL REPRESENTATION ************************************\n")
+    slices=list(d.values())
+    labels=list(d.keys())
+    col=['blue','red','green','yellow']
+    plt.pie(slices,labels=labels,shadow=True,startangle=90,autopct="%0.1f%%",wedgeprops={'edgecolor':'black'},colors=col)
+    plt.title("Monthy Expense Chart")
+    plt.legend(bbox_to_anchor=(1,1))
+    plt.savefig('notepadgraph.png',dpi=200)
+    files.download('notepadgraph.png')
+    plt.show()
+        
+  except FileNotFoundError: 
+    print("File",fname,"couldn't be found,Please Re-Enter the correct file name")
+    notepad()
+
+################################################### END OF NOTEPAD PROGRAM ##################################################
+
+
+################################################### START OF EXCEL PROGRAM ##################################################
+
+#Excel file
+def excel():
+  try:
+    excel_name=input("Enter the Excel File name:")
+    data_frame=pd.read_csv(excel_name)
+    data_frame=data_frame.set_index('Expenses')
+    total=data_frame['week 1'].sum()+data_frame['week 2'].sum()+data_frame['week 3'].sum()+data_frame['week 4'].sum()
+    display(data_frame,total)
+    bcr.bar_chart_race(df=data_frame,filename='excel_graph.mp4',title="Monthly Expense Graph",fixed_max=True,bar_size=0.5,steps_per_period=1,period_length=4000)
+    files.download('excel_graph.mp4')
+    
+
+  except FileNotFoundError:
+    print("File",excel_name,"couldn't be found,Please Re-Enter the correct file name")
+    excel()
+
+################################################### END OF NOTEPAD PROGRAM ##################################################
+
+#main program
+print("****************************************************************************")
+print("\t\t\t WELCOME TO EXPENDITURE DETECTOR \t\t\t")
+print("*****************************************************************************\n")
+name=input("Enter your Name:")
+salary=float(input("Enter your Monthly salary\n"))
+print("Hello {} !!!\nJUST FEW STEPS AWAY!!!!\n".format(name))
+
+while True:
+  print("*********************************")
+  print("\t MAIN MENU \t")
+  print("*********************************\n")
+  choice=int(input("1:Enter Expenses Manually\n2:Upload a file\n3:QUIT\n"))
+  if choice==1:
+    userinput()
+  elif choice==2:
+    print("ENTER THE FILE TYPE\n1:NOTEPAD\n2:EXCEL")
+    try:
+      file_type=int(input())
+    except ValueError:
+      print("Ooops !!!!, That shouldn't be entered\nPlease Enter the number of the file type displayed")
+      file_type=int(input())
+
+    if file_type==1:
+      notepad()
+
+    elif file_type==2:
+      excel()
+
+    else:
+      print("Sorry !!!!!\nNO SUCH FILE OPTIONS AVAILABLE\nTHANK YOU!!!!!")
+  
+  elif choice==3:
+    break
+
+  else:
+    print("INVALID OPTION")
